@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../database/db");
-const bcrypt = require("bcryptjs");
-const CustomError = require("../helpers/error");
+// const bcrypt = require("bcryptjs");
+// const CustomError = require("../helpers/error");
 
 const userSchema = {
   id: {
@@ -30,17 +30,17 @@ const userSchema = {
 const User = sequelize.define('User', userSchema, {
   timestamps: true,
   hooks: {
-    beforeValidate(_pl) { },
-    beforeUpdate(_pl) { },
-    afterFind(_pl) { },
+    beforeValidate() { },
+    beforeUpdate() { },
+    afterFind() { },
   },
 })
 
 User.sync({ alter: true })
-  .then((_) => {
+  .then(() => {
     if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production') console.log('=> User model synced')
   })
-  .catch((_) => {
+  .catch(() => {
     if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production') console.log('Error while syncing User')
   })
 

@@ -1,4 +1,4 @@
-const StatusCode = require('http-status-codes')
+// const StatusCode = require('http-status-codes')
 
 function success(res, message, data = {}, code = 200) {
   return res.status(code).json({
