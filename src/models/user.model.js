@@ -1,11 +1,11 @@
 const { DataTypes } = require('sequelize')
 const { sequelize } = require('../database/db')
-// const bcrypt = require("bcryptjs");
-// const CustomError = require("../helpers/error");
+const logger = require('../utils/logger')
 
 const userSchema = {
   id: {
     type: DataTypes.UUID,
+    default: DataTypes.UUID4,
     primaryKey: true,
     unique: true,
   },
@@ -21,7 +21,11 @@ const userSchema = {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  phone: {
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  phoneNumber: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -42,14 +46,14 @@ User.sync({ alter: true })
       process.env.NODE_ENV &&
       process.env.NODE_ENV.toLowerCase() === 'production'
     )
-      console.log('=> User model synced')
+      logger.info('=> User model synced')
   })
   .catch(() => {
     if (
       process.env.NODE_ENV &&
       process.env.NODE_ENV.toLowerCase() === 'production'
     )
-      console.log('Error while syncing User')
+      logger.error('Error while syncing User')
   })
 
 module.exports = User

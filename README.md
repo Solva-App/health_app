@@ -4,10 +4,10 @@ A simple online pharmacy to buy drugs at competitive prices.
 
 ## Features
 
-* Convenient online platform
-* Competitive pricing
+- Convenient online platform
+- Competitive pricing
 
 ## Goals
 
-* Provide easy access to drugs
-* Reduce buying costs
+- Provide easy access to drugs
+- Reduce buying costs

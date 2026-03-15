@@ -1,39 +1,63 @@
-const StatusCode = require('http-status-codes')
+const { StatusCodes } = require('http-status-codes')
 
-function success(res, message, data = {}, code = 200) {
-  return res.status(code).json({
-    status: 'success',
+const send = (res, status, message, data = null, success = false) => {
+  const response = {
+    success,
+    status,
     message,
-    data,
-  })
+  }
+  if (data) response.data = data
+  return res.status(status).json(response)
 }
 
-function error(res, message, code = 500) {
-  return res.status(code).json({
-    status: 'error',
-    message,
-  })
+const success = (
+  res,
+  message = 'Operation successful',
+  data = {},
+  code = StatusCodes.OK
+) => {
+  return send(res, code, message, data, true)
 }
 
-function notFound(res, message) {
-  return res.status(404).json({
-    status: 'error',
-    message,
-  })
+const badRequest = (res, message = 'Invalid request data') => {
+  return send(res, StatusCodes.BAD_REQUEST, message)
 }
 
-function unAuthorized(res, message) {
-  return res.status(401).json({
-    status: 'error',
-    message,
-  })
+const unAuthorized = (res, message = 'Authentication required') => {
+  return send(res, StatusCodes.UNAUTHORIZED, message)
 }
 
-function badRequest(res, message) {
-  return res.status(400).json({
-    status: 'error',
-    message,
-  })
+const forbidden = (res, message = 'Permission denied') => {
+  return send(res, StatusCodes.FORBIDDEN, message)
 }
 
-module.exports = { success, error, notFound, unAuthorized, badRequest }
+const notFound = (res, message = 'Resource not found') => {
+  return send(res, StatusCodes.NOT_FOUND, message)
+}
+
+const conflict = (res, message = 'Resource already exists') => {
+  return send(res, StatusCodes.CONFLICT, message)
+}
+
+const validationError = (res, message = 'Validation failed') => {
+  return send(res, StatusCodes.UNPROCESSABLE_ENTITY, message)
+}
+
+const error = (
+  res,
+  message = 'An internal server error occurred',
+  code = StatusCodes.INTERNAL_SERVER_ERROR
+) => {
+  return send(res, code, message)
+}
+
+module.exports = {
+  success,
+  badRequest,
+  unAuthorized,
+  forbidden,
+  notFound,
+  conflict,
+  validationError,
+  error,
+}
