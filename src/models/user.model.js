@@ -29,6 +29,10 @@ const userSchema = {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  refreshToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }
 
 const User = sequelize.define('User', userSchema, {
