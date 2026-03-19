@@ -8,7 +8,9 @@ const handleError = require('./middlewares/error')
 const { limiter } = require('./middlewares/rateLimiter')
 
 const logger = require('./utils/logger')
-const { notFound } = require('./utils/response')
+const { notFound, success } = require('./utils/response')
+
+const authRoutes = require('./routes/auth.routes')
 
 const app = express()
 
@@ -19,8 +21,10 @@ app.use(morgan)
 app.use(limiter)
 
 app.get('/api/v1/ping', (req, res) => {
-  res.status(200).json({ success: true, message: 'Server is running' })
+  return success(res, 'Server is running')
 })
+
+app.use('/api/v1/auth', authRoutes)
 
 app.use((req, res, next) => {
   return notFound(

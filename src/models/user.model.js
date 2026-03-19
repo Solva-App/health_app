@@ -1,25 +1,31 @@
 const { DataTypes } = require('sequelize')
-const { sequelize } = require('../database/db')
+const { sequelize } = require('../config/db')
 const logger = require('../utils/logger')
 
 const userSchema = {
   id: {
     type: DataTypes.UUID,
-    default: DataTypes.UUID4,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
+    unique: true,
+  },
+  userName: {
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true,
   },
   firstName: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   lastName: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
@@ -27,7 +33,7 @@ const userSchema = {
   },
   phoneNumber: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   refreshToken: {
     type: DataTypes.STRING,

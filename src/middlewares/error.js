@@ -1,30 +1,36 @@
 /* eslint-disable no-unused-vars */
 const logger = require('../utils/logger')
-const { sendError } = require('../utils/response')
+const { serverError, conflict, badRequest } = require('../utils/response')
 
-const logError = (err, req, res) => {
+const logError = (err, req) => {
   const message = err.message || 'Internal Server Error'
-  const status = err.status || 500
-
   logger.error(`${req.method} ${req.url} - ${message}`, err.stack)
 }
 
-const handleUniqueConstraintError = (err, res) => {
+const handleSequelizeError = (err, res) => {
   if (err.name === 'SequelizeUniqueConstraintError') {
-    return res
-      .status(409)
-      .json({ success: false, message: 'Duplicate entry detected' })
+    return conflict(res, 'Duplicate entry detected: This record already exists')
   }
+
+  if (err.name === 'SequelizeConnectionRefusedError') {
+    return serverError(res, 'Database connection refused', 503)
+  }
+
+  return null
 }
 
 const handleError = (err, req, res, _next) => {
-  logError(err, req, res)
-  handleUniqueConstraintError(err, res)
-  return sendError(
-    res,
-    err.message || 'Internal Server Error',
-    err.status || 500
-  )
+  logError(err, req)
+
+  const dbErrorResponse = handleSequelizeError(err, res)
+  if (dbErrorResponse) return dbErrorResponse
+
+  const statusCode = err.status || 500
+  const message = process.env.NODE_ENV === 'production'
+    ? 'An internal server error occurred'
+    : err.message
+
+  return serverError(res, message, statusCode)
 }
 
 module.exports = handleError
