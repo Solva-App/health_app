@@ -3,6 +3,7 @@ const User = require('../models/user.model')
 const logger = require('../utils/logger')
 const { success, created, unAuthorized, conflict } = require('../utils/response')
 const { generateTokenPair, hashPassword, comparePassword } = require('../utils/security')
+const { sendWelcomeEmail } = require('../utils/email')
 
 const register = async (req, res, next) => {
   try {
@@ -25,6 +26,8 @@ const register = async (req, res, next) => {
       email,
       password: hashedPassword,
     })
+
+    await sendWelcomeEmail(newUser);
 
     logger.info(`New user registered: ${email}`)
 
