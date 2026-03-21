@@ -9,18 +9,14 @@ const userSchema = {
     primaryKey: true,
     unique: true,
   },
-  userName: {
+  username: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
   },
-  firstName: {
+  fullName: {
     type: DataTypes.STRING,
-    allowNull: true,
-  },
-  lastName: {
-    type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
@@ -35,18 +31,30 @@ const userSchema = {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
   refreshToken: {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  resetPasswordExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  }
 }
 
 const User = sequelize.define('User', userSchema, {
   timestamps: true,
   hooks: {
-    beforeValidate() {},
-    beforeUpdate() {},
-    afterFind() {},
+    beforeValidate() { },
+    beforeUpdate() { },
+    afterFind() { },
   },
 })
 
@@ -65,5 +73,12 @@ User.sync({ alter: true })
     )
       logger.error('Error while syncing User')
   })
+
+User.associate = (models) => {
+  User.hasOne(models.Otp, {
+    foreignKey: 'userId',
+    as: 'otp'
+  })
+}
 
 module.exports = User

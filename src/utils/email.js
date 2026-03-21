@@ -16,7 +16,7 @@ const sendMail = async ({ to, subject, template, context }) => {
     const html = await prepareTemplate(template, context);
 
     const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Health App <onboarding@resend.dev>',
+      from: process.env.EMAIL_FROM || 'Health App <onboarding@healthapp.dev>',
       to: [to],
       subject,
       html,
@@ -37,13 +37,41 @@ const sendWelcomeEmail = async (user) => {
     subject: 'Welcome to the Health Community!',
     template: 'welcome',
     context: {
-      userName: user.userName,
+      fullName: user.fullName,
       email: user.email
+    }
+  });
+};
+
+const sendOtpEmail = async (user, otpCode) => {
+  return sendMail({
+    to: user.email,
+    subject: 'Your Verification Code',
+    template: 'otp-verification',
+    context: {
+      fullName: user.fullName,
+      otpCode: otpCode,
+      expiryMinutes: 10
+    }
+  });
+};
+
+const sendResetPasswordEmail = async (user, otpCode) => {
+  return sendMail({
+    to: user.email,
+    subject: 'Reset Your Password',
+    template: 'reset-password',
+    context: {
+      fullName: user.fullName,
+      otpCode: otpCode,
+      expiryMinutes: 15
     }
   });
 };
 
 
 module.exports = {
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  sendOtpEmail,
+  sendResetPasswordEmail
 };

@@ -1,35 +1,42 @@
-const logger = require('../utils/logger')
-const { serverError, conflict } = require('../utils/response')
+const logger = require('../utils/logger');
+const { serverError, conflict } = require('../utils/response');
 
 const logError = (err, req) => {
-  const message = err.message || 'Internal Server Error'
-  logger.error(`${req.method} ${req.url} - ${message}`, err.stack)
-}
+  const message = err.message || 'Internal Server Error';
+  if (process.env.NODE_ENV !== 'production' && !err.isOperational) {
+    logger.error(`${req.method} ${req.url} - ${message}`, err.stack);
+  } else {
+    logger.error(`${req.method} ${req.url} - ${message}`);
+  }
+};
 
 const handleSequelizeError = (err, res) => {
   if (err.name === 'SequelizeUniqueConstraintError') {
-    return conflict(res, 'Duplicate entry detected: This record already exists')
+    const field = err.errors ? err.errors[0].path : 'field';
+    return conflict(res, `Duplicate entry: ${field} already exists`);
   }
 
-  if (err.name === 'SequelizeConnectionRefusedError') {
-    return serverError(res, 'Database connection refused', 503)
+  if (err.name === 'SequelizeConnectionRefusedError' || err.name === 'SequelizeConnectionError') {
+    return serverError(res, 'Database connection failed', 503);
   }
 
-  return null
-}
+  if (err.name === 'SequelizeDatabaseError') {
+    return serverError(res, `Database Error: ${err.message}`, 500);
+  }
+
+  return null;
+};
 
 const handleError = (err, req, res) => {
-  logError(err, req)
+  logError(err, req);
 
-  const dbErrorResponse = handleSequelizeError(err, res)
-  if (dbErrorResponse) return dbErrorResponse
+  const dbErrorResponse = handleSequelizeError(err, res);
+  if (dbErrorResponse) return dbErrorResponse;
 
-  const statusCode = err.status || 500
-  const message = process.env.NODE_ENV === 'production'
-    ? 'An internal server error occurred'
-    : err.message
+  const statusCode = err.statusCode || err.status || 500;
+  const message = err.message || 'An unexpected error occurred';
 
-  return serverError(res, message, statusCode)
-}
+  return serverError(res, message, statusCode);
+};
 
-module.exports = handleError
+module.exports = handleError;
