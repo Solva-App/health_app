@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const logger = require('../utils/logger');
 const { serverError, conflict } = require('../utils/response');
 
@@ -21,13 +22,13 @@ const handleSequelizeError = (err, res) => {
   }
 
   if (err.name === 'SequelizeDatabaseError') {
-    return serverError(res, `Database Error: ${err.message}`, 500);
+    return serverError(res, 'Database Error', 500);
   }
 
   return null;
 };
 
-const handleError = (err, req, res) => {
+const handleError = (err, req, res, next) => {
   logError(err, req);
 
   const dbErrorResponse = handleSequelizeError(err, res);
