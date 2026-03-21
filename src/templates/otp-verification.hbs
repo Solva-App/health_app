@@ -1,29 +1,29 @@
-<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Verify Your Account</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f0f0f0;
-    }
-    h1 {
-      color: #ff0000;
-      letter-spacing: 5px;
-    }
-    p {
-      color: #000000;
-    }
-  </style>
-</head>
-<body>
-<div style="text-align: center; padding: 20px;">
-  <h2>Verify Your Account</h2>
-  <p>Hello {{fullName}}, use the code below to complete your verification:</p>
-  <h1>{{otpCode}}</h1>
-  <p>This code will expire in {{expiryMinutes}} minutes.</p>
-</div>
-</body>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>Verify Your Account</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f0f0f0;
+      }
+      h1 {
+        color: #ff0000;
+        letter-spacing: 5px;
+      }
+      p {
+        color: #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <div style='text-align: center; padding: 20px;'>
+      <h2>Verify Your Account</h2>
+      <p>Hello
+        {{fullName}}, use the code below to complete your verification:</p>
+      <h1>{{otpCode}}</h1>
+      <p>This code will expire in {{expiryMinutes}} minutes.</p>
+    </div>
+  </body>
 </html>

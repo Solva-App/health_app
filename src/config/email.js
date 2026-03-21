@@ -1,9 +1,9 @@
-const { Resend } = require('resend');
+const { Resend } = require('resend')
 
 if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is missing in .env file');
+  throw new Error('RESEND_API_KEY is missing in .env file')
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
-module.exports = resend;
+module.exports = resend

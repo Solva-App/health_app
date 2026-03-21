@@ -12,7 +12,7 @@ const validate = (schema) => {
 
     const { error, value } = schema.validate(bodyToValidate, {
       abortEarly: false,
-      stripUnknown: true
+      stripUnknown: true,
     })
 
     if (error) {

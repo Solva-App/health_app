@@ -1,35 +1,39 @@
-const path = require('path');
-const fs = require('fs/promises');
-const handlebars = require('handlebars');
-const resend = require('../config/email');
-const logger = require('./logger');
+const path = require('path')
+const fs = require('fs/promises')
+const handlebars = require('handlebars')
+const resend = require('../config/email')
+const logger = require('./logger')
 
 const prepareTemplate = async (templateName, context) => {
-  const templatePath = path.join(__dirname, '../templates', `${templateName}.hbs`);
-  const content = await fs.readFile(templatePath, 'utf-8');
-  const compiled = handlebars.compile(content);
-  return compiled(context);
-};
+  const templatePath = path.join(
+    __dirname,
+    '../templates',
+    `${templateName}.hbs`
+  )
+  const content = await fs.readFile(templatePath, 'utf-8')
+  const compiled = handlebars.compile(content)
+  return compiled(context)
+}
 
 const sendMail = async ({ to, subject, template, context }) => {
   try {
-    const html = await prepareTemplate(template, context);
+    const html = await prepareTemplate(template, context)
 
     const { data, error } = await resend.emails.send({
       from: process.env.EMAIL_FROM || 'Health App <onboarding@healthapp.dev>',
       to: [to],
       subject,
       html,
-    });
+    })
 
-    if (error) throw error;
-    logger.info(`Email [${template}] sent to ${to}`);
-    return data;
+    if (error) throw error
+    logger.info(`Email [${template}] sent to ${to}`)
+    return data
   } catch (err) {
-    logger.error(`Mail Error (${template}):`, err.message);
-    return err;
+    logger.error(`Mail Error (${template}):`, err.message)
+    return err
   }
-};
+}
 
 const sendWelcomeEmail = async (user) => {
   return sendMail({
@@ -38,10 +42,10 @@ const sendWelcomeEmail = async (user) => {
     template: 'welcome',
     context: {
       fullName: user.fullName,
-      email: user.email
-    }
-  });
-};
+      email: user.email,
+    },
+  })
+}
 
 const sendOtpEmail = async (user, otpCode) => {
   return sendMail({
@@ -51,10 +55,10 @@ const sendOtpEmail = async (user, otpCode) => {
     context: {
       fullName: user.fullName,
       otpCode: otpCode,
-      expiryMinutes: 10
-    }
-  });
-};
+      expiryMinutes: 10,
+    },
+  })
+}
 
 const sendResetPasswordEmail = async (user, otpCode) => {
   return sendMail({
@@ -64,14 +68,13 @@ const sendResetPasswordEmail = async (user, otpCode) => {
     context: {
       fullName: user.fullName,
       otpCode: otpCode,
-      expiryMinutes: 15
-    }
-  });
-};
-
+      expiryMinutes: 15,
+    },
+  })
+}
 
 module.exports = {
   sendWelcomeEmail,
   sendOtpEmail,
-  sendResetPasswordEmail
-};
+  sendResetPasswordEmail,
+}

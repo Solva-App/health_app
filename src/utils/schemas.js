@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi')
 
 const schemas = {
   register: Joi.object({
@@ -7,10 +7,15 @@ const schemas = {
     password: Joi.string()
       .min(8)
       .max(30)
-      .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'))
+      .pattern(
+        new RegExp(
+          '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'
+        )
+      )
       .required()
       .messages({
-        'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+        'string.pattern.base':
+          'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         'string.min': 'Password must be at least 8 characters long.',
         'string.max': 'Password cannot exceed 30 characters.',
         'any.required': 'Password is required.',
@@ -28,15 +33,15 @@ const schemas = {
   }),
 
   refreshToken: Joi.object({
-    token: Joi.string().required()
+    token: Joi.string().required(),
   }),
 
   resendOtp: Joi.object({
-    email: Joi.string().email().required()
+    email: Joi.string().email().required(),
   }),
 
   forgotPassword: Joi.object({
-    email: Joi.string().email().required()
+    email: Joi.string().email().required(),
   }),
 
   resetPassword: Joi.object({
@@ -45,15 +50,20 @@ const schemas = {
     password: Joi.string()
       .min(8)
       .max(30)
-      .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'))
+      .pattern(
+        new RegExp(
+          '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'
+        )
+      )
       .required()
       .messages({
-        'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+        'string.pattern.base':
+          'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         'string.min': 'Password must be at least 8 characters long.',
         'string.max': 'Password cannot exceed 30 characters.',
         'any.required': 'Password is required.',
       }),
-  })
-};
+  }),
+}
 
-module.exports = schemas;
+module.exports = schemas

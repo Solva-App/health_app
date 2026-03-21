@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize')
 const { sequelize } = require('../config/db')
 const logger = require('../utils/logger')
-const User = require('./user.model');
+const User = require('./user.model')
 
 const otpSchema = {
   id: {
@@ -21,7 +21,7 @@ const otpSchema = {
     type: DataTypes.UUID,
     allowNull: false,
     unique: true,
-  }
+  },
 }
 
 const Otp = sequelize.define('Otp', otpSchema, {
@@ -33,8 +33,8 @@ const Otp = sequelize.define('Otp', otpSchema, {
   },
 })
 
-Otp.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
-User.hasOne(Otp, { foreignKey: 'userId', as: 'otp' });
+Otp.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' })
+User.hasOne(Otp, { foreignKey: 'userId', as: 'otp' })
 
 Otp.sync({ alter: true })
   .then(() => {

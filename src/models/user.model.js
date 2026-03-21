@@ -46,15 +46,15 @@ const userSchema = {
   resetPasswordExpires: {
     type: DataTypes.DATE,
     allowNull: true,
-  }
+  },
 }
 
 const User = sequelize.define('User', userSchema, {
   timestamps: true,
   hooks: {
-    beforeValidate() { },
-    beforeUpdate() { },
-    afterFind() { },
+    beforeValidate() {},
+    beforeUpdate() {},
+    afterFind() {},
   },
 })
 
@@ -77,7 +77,7 @@ User.sync({ alter: true })
 User.associate = (models) => {
   User.hasOne(models.Otp, {
     foreignKey: 'userId',
-    as: 'otp'
+    as: 'otp',
   })
 }
 
