@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
@@ -21,12 +20,14 @@ app.use(morgan)
 app.use(limiter)
 
 app.get('/api/v1/ping', (req, res) => {
+  logger.info('Server pinged')
   return success(res, 'Server is running')
 })
 
 app.use('/api/v1/auth', authRoutes)
 
-app.use((req, res, next) => {
+app.use((req, res) => {
+  logger.error(`Resources not found for ${req.method} ${req.originalUrl}`)
   return notFound(
     res,
     `Resources not found for ${req.method} ${req.originalUrl}`

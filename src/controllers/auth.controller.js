@@ -83,6 +83,7 @@ const refreshToken = async (req, res, next) => {
     try {
       decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
     } catch (err) {
+      logger.error(err)
       return unAuthorized(res, 'Refresh token expired or tampered with')
     }
 

@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 const logger = require('../utils/logger')
-const { serverError, conflict, badRequest } = require('../utils/response')
+const { serverError, conflict } = require('../utils/response')
 
 const logError = (err, req) => {
   const message = err.message || 'Internal Server Error'
@@ -19,7 +18,7 @@ const handleSequelizeError = (err, res) => {
   return null
 }
 
-const handleError = (err, req, res, _next) => {
+const handleError = (err, req, res) => {
   logError(err, req)
 
   const dbErrorResponse = handleSequelizeError(err, res)

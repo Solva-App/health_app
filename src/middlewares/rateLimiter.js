@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { rateLimit } = require('express-rate-limit')
 const { forbidden } = require('../utils/response')
 
@@ -10,7 +9,7 @@ const limiter = isProduction
       limit: 10,
       standardHeaders: true,
       legacyHeaders: false,
-      handler: (req, res, _next, options) => {
+      handler: (req, res) => {
         return forbidden(
           res,
           `Too many requests. Please try again after 15 minutes.`
