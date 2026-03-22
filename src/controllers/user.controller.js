@@ -1,14 +1,22 @@
-const { User } = require('../models')
+const User = require('../models/user.model')
+const { success, notFound } = require('../utils/response')
 
-exports.getUsers = async (req, res) => {
+const getUser = async (req, res, next) => {
   try {
-    const users = await User.findAll()
+    const { id } = req.user
+    const user = await User.findByPk(id, {
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+    });
 
-    res.json({
-      message: 'Users fetched successfully',
-      data: users,
-    })
+    if (!user) {
+      return notFound(res, 'User not found')
+    }
+
+    return success(res, user)
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error)
   }
 }
+
+module.exports = { getUser }
+
