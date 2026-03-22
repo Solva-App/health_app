@@ -17,10 +17,7 @@ const handleSequelizeError = (err, res) => {
     return conflict(res, `Duplicate entry: ${field} already exists`)
   }
 
-  if (
-    err.name === 'SequelizeConnectionRefusedError' ||
-    err.name === 'SequelizeConnectionError'
-  ) {
+  if (err.name === 'SequelizeConnectionRefusedError' || err.name === 'SequelizeConnectionError') {
     return serverError(res, 'Database connection failed', 503)
   }
 

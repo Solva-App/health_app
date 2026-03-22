@@ -12,12 +12,7 @@ const send = (res, status, message, data = null, success = false) => {
   return res.status(status).json(response)
 }
 
-const success = (
-  res,
-  message = 'Operation successful',
-  data = {},
-  code = StatusCodes.OK
-) => {
+const success = (res, message = 'Operation successful', data = {}, code = StatusCodes.OK) => {
   return send(res, code, message, data, true)
 }
 
@@ -25,11 +20,7 @@ const created = (res, message = 'Resource created successfully', data = {}) => {
   return send(res, StatusCodes.CREATED, message, data, true)
 }
 
-const accepted = (
-  res,
-  message = 'Request accepted and processing',
-  data = {}
-) => {
+const accepted = (res, message = 'Request accepted and processing', data = {}) => {
   return send(res, StatusCodes.ACCEPTED, message, data, true)
 }
 
@@ -61,11 +52,7 @@ const validationError = (res, message = 'Validation failed') => {
   return send(res, StatusCodes.UNPROCESSABLE_ENTITY, message)
 }
 
-const serverError = (
-  res,
-  message = 'An internal server error occurred',
-  code = StatusCodes.INTERNAL_SERVER_ERROR
-) => {
+const serverError = (res, message = 'An internal server error occurred', code = StatusCodes.INTERNAL_SERVER_ERROR) => {
   return send(res, code, message)
 }
 

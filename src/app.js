@@ -29,10 +29,7 @@ app.use('/api/v1/auth', authRoutes)
 
 app.use((req, res) => {
   logger.error(`Resources not found for ${req.method} ${req.originalUrl}`)
-  return notFound(
-    res,
-    `Resources not found for ${req.method} ${req.originalUrl}`
-  )
+  return notFound(res, `Resources not found for ${req.method} ${req.originalUrl}`)
 })
 
 app.use(handleError)

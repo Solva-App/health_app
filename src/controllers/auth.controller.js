@@ -3,24 +3,9 @@ const { sequelize } = require('../config/db')
 const User = require('../models/user.model')
 const Otp = require('../models/otp.model')
 const logger = require('../utils/logger')
-const {
-  success,
-  created,
-  unAuthorized,
-  conflict,
-  badRequest,
-  notFound,
-} = require('../utils/response')
-const {
-  generateTokenPair,
-  hashPassword,
-  comparePassword,
-} = require('../utils/security')
-const {
-  sendWelcomeEmail,
-  sendOtpEmail,
-  sendResetPasswordEmail,
-} = require('../utils/email')
+const { success, created, unAuthorized, conflict, badRequest, notFound } = require('../utils/response')
+const { generateTokenPair, hashPassword, comparePassword } = require('../utils/security')
+const { sendWelcomeEmail, sendOtpEmail, sendResetPasswordEmail } = require('../utils/email')
 const { generateOtpData } = require('../utils/generate')
 
 const register = async (req, res, next) => {
@@ -29,7 +14,10 @@ const register = async (req, res, next) => {
   try {
     const { fullName, email, password } = req.body
 
-    const existingUser = await User.findOne({ where: { email } })
+    const existingUser = await User.findOne({
+      where: { email },
+      transaction: t,
+    })
     if (existingUser) {
       await t.rollback()
       return conflict(res, 'Email is already registered')
@@ -46,34 +34,29 @@ const register = async (req, res, next) => {
       { transaction: t }
     )
 
-    const { code, expiresAt } = generateOtpData(10)
-
-    await Otp.create(
+    const otpData = generateOtpData(10)
+    const otpRecord = await Otp.create(
       {
         userId: newUser.id,
-        code,
-        expiresAt,
+        code: otpData.code,
+        expiresAt: otpData.expiresAt,
       },
       { transaction: t }
     )
 
-    await sendOtpEmail(newUser, code)
+    await sendOtpEmail(newUser, otpRecord.code)
 
     await t.commit()
 
     logger.info(`New user registered and OTP sent: ${email}`)
 
-    return created(
-      res,
-      'User registered successfully. Please check your email for the verification code.',
-      {
-        user: {
-          id: newUser.id,
-          fullName: newUser.fullName,
-          email: newUser.email,
-        },
-      }
-    )
+    return created(res, 'User registered successfully. Please check your email for the verification code.', {
+      user: {
+        id: newUser.id,
+        fullName: newUser.fullName,
+        email: newUser.email,
+      },
+    })
   } catch (err) {
     if (!t.finished) await t.rollback()
     next(err)
@@ -84,15 +67,18 @@ const verifyCode = async (req, res, next) => {
   const t = await sequelize.transaction()
 
   try {
-    const { email, code } = req.body
+    const { id, code } = req.body
 
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: { id }, transaction: t })
     if (!user) {
       await t.rollback()
       return notFound(res, 'User not found')
     }
 
-    const otpRecord = await Otp.findOne({ where: { userId: user.id } })
+    const otpRecord = await Otp.findOne({
+      where: { userId: user.id },
+      transaction: t,
+    })
 
     if (!otpRecord) {
       await t.rollback()
@@ -107,10 +93,7 @@ const verifyCode = async (req, res, next) => {
     const now = new Date()
     if (now > otpRecord.expiresAt) {
       await t.rollback()
-      return badRequest(
-        res,
-        'Verification code has expired. Please request a new one.'
-      )
+      return badRequest(res, 'Verification code has expired. Please request a new one.')
     }
 
     await user.update({ isVerified: true }, { transaction: t })
@@ -150,7 +133,7 @@ const resendOtp = async (req, res, next) => {
 
     await sendOtpEmail(user, code)
 
-    return success(res, 'A new verification code has been sent to your email')
+    return success(res, 'A new verification code has been sent to your email', user.id)
   } catch (err) {
     next(err)
   }
@@ -206,10 +189,7 @@ const refreshToken = async (req, res, next) => {
 
     if (!user) {
       logger.warn(`Invalid refresh attempt for User ID: ${decoded.id}`)
-      return unAuthorized(
-        res,
-        'Session expired or invalid. Please login again.'
-      )
+      return unAuthorized(res, 'Session expired or invalid. Please login again.')
     }
 
     const tokens = generateTokenPair(user)
@@ -233,10 +213,7 @@ const forgotPassword = async (req, res, next) => {
     const user = await User.findOne({ where: { email } })
 
     if (!user) {
-      return success(
-        res,
-        'If an account exists with that email, a code has been sent.'
-      )
+      return success(res, 'If an account exists with that email, a code has been sent.')
     }
 
     const { code, expiresAt } = generateOtpData(15)
@@ -249,10 +226,7 @@ const forgotPassword = async (req, res, next) => {
 
     await sendResetPasswordEmail(user, code)
 
-    return success(
-      res,
-      'If an account exists with that email, a code has been sent.'
-    )
+    return success(res, 'If an account exists with that email, a code has been sent.', user.id)
   } catch (err) {
     next(err)
   }
@@ -261,15 +235,18 @@ const forgotPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   const t = await sequelize.transaction()
   try {
-    const { email, code, newPassword } = req.body
+    const { id, code, newPassword } = req.body
 
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: { id }, transaction: t })
     if (!user) {
       await t.rollback()
       return badRequest(res, 'Invalid request')
     }
 
-    const otpRecord = await Otp.findOne({ where: { userId: user.id, code } })
+    const otpRecord = await Otp.findOne({
+      where: { userId: user.id, code },
+      transaction: t,
+    })
 
     if (!otpRecord || new Date() > otpRecord.expiresAt) {
       await t.rollback()
@@ -282,10 +259,7 @@ const resetPassword = async (req, res, next) => {
     await otpRecord.destroy({ transaction: t })
 
     await t.commit()
-    return success(
-      res,
-      'Password has been reset successfully. You can now log in.'
-    )
+    return success(res, 'Password has been reset successfully. You can now log in.')
   } catch (err) {
     if (!t.finished) await t.rollback()
     next(err)

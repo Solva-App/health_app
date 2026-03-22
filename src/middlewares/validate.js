@@ -16,9 +16,7 @@ const validate = (schema) => {
     })
 
     if (error) {
-      const errorMessage = error.details
-        .map((detail) => detail.message.replace(/"/g, ''))
-        .join(', ')
+      const errorMessage = error.details.map((detail) => detail.message.replace(/"/g, '')).join(', ')
 
       return badRequest(res, errorMessage)
     }

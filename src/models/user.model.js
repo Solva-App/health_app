@@ -60,17 +60,10 @@ const User = sequelize.define('User', userSchema, {
 
 User.sync({ alter: true })
   .then(() => {
-    if (
-      process.env.NODE_ENV &&
-      process.env.NODE_ENV.toLowerCase() === 'production'
-    )
-      logger.info('=> User model synced')
+    if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production') logger.info('=> User model synced')
   })
   .catch(() => {
-    if (
-      process.env.NODE_ENV &&
-      process.env.NODE_ENV.toLowerCase() === 'production'
-    )
+    if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production')
       logger.error('Error while syncing User')
   })
 

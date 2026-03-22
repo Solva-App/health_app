@@ -5,11 +5,7 @@ const resend = require('../config/email')
 const logger = require('./logger')
 
 const prepareTemplate = async (templateName, context) => {
-  const templatePath = path.join(
-    __dirname,
-    '../templates',
-    `${templateName}.hbs`
-  )
+  const templatePath = path.join(__dirname, '../templates', `${templateName}.hbs`)
   const content = await fs.readFile(templatePath, 'utf-8')
   const compiled = handlebars.compile(content)
   return compiled(context)

@@ -10,10 +10,7 @@ const limiter = isProduction
       standardHeaders: true,
       legacyHeaders: false,
       handler: (req, res) => {
-        return forbidden(
-          res,
-          `Too many requests. Please try again after 15 minutes.`
-        )
+        return forbidden(res, `Too many requests. Please try again after 15 minutes.`)
       },
     })
   : (req, res, next) => next()
@@ -23,10 +20,7 @@ const authLimiter = isProduction
       windowMs: 60 * 60 * 1000,
       limit: 10,
       handler: (req, res) => {
-        return forbidden(
-          res,
-          'Too many login attempts. Please try again in an hour.'
-        )
+        return forbidden(res, 'Too many login attempts. Please try again in an hour.')
       },
     })
   : (req, res, next) => next()

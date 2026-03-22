@@ -7,11 +7,7 @@ const schemas = {
     password: Joi.string()
       .min(8)
       .max(30)
-      .pattern(
-        new RegExp(
-          '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'
-        )
-      )
+      .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'))
       .required()
       .messages({
         'string.pattern.base':
@@ -50,11 +46,7 @@ const schemas = {
     password: Joi.string()
       .min(8)
       .max(30)
-      .pattern(
-        new RegExp(
-          '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'
-        )
-      )
+      .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'))
       .required()
       .messages({
         'string.pattern.base':

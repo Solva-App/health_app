@@ -38,17 +38,10 @@ User.hasOne(Otp, { foreignKey: 'userId', as: 'otp' })
 
 Otp.sync({ alter: true })
   .then(() => {
-    if (
-      process.env.NODE_ENV &&
-      process.env.NODE_ENV.toLowerCase() === 'production'
-    )
-      logger.info('=> Otp model synced')
+    if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production') logger.info('=> Otp model synced')
   })
   .catch(() => {
-    if (
-      process.env.NODE_ENV &&
-      process.env.NODE_ENV.toLowerCase() === 'production'
-    )
+    if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production')
       logger.error('Error while syncing Otp')
   })
 
