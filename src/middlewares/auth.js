@@ -5,6 +5,9 @@ const verifyToken = (token, secret) => {
   try {
     return jwt.verify(token, secret)
   } catch (err) {
+    if (err.name === 'JsonWebTokenError') {
+      return null
+    }
     return err
   }
 }
