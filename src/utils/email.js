@@ -16,7 +16,7 @@ const sendMail = async ({ to, subject, template, context }) => {
     const html = await prepareTemplate(template, context)
 
     const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Health App <onboarding@healthapp.dev>',
+      from: process.env.EMAIL_FROM || 'Health App <onboarding@resend.dev>',
       to: [to],
       subject,
       html,

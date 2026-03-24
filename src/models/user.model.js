@@ -67,11 +67,4 @@ User.sync({ alter: true })
       logger.error('Error while syncing User')
   })
 
-User.associate = (models) => {
-  User.hasOne(models.Otp, {
-    foreignKey: 'userId',
-    as: 'otp',
-  })
-}
-
 module.exports = User
