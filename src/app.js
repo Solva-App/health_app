@@ -11,6 +11,7 @@ const { notFound, success } = require('./utils/response')
 
 const authRoutes = require('./routes/auth.routes')
 const userRoutes = require('./routes/user.routes')
+const drugRoutes = require('./routes/drug.routes')
 
 const app = express()
 
@@ -28,6 +29,7 @@ app.get('/api/v1/ping', (req, res) => {
 
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/drugs', drugRoutes)
 
 app.use((req, res) => {
   logger.error(`Resources not found for ${req.method} ${req.originalUrl}`)

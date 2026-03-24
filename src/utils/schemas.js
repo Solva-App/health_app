@@ -93,6 +93,36 @@ const schemas = {
         'any.required': 'New Password is required.',
       }),
   }),
+
+  createDrug: Joi.object({
+    name: Joi.string().required(),
+    brandName: Joi.string(),
+    categoryId: Joi.string().guid().required(),
+    imageUrl: Joi.string().optional(),
+    type: Joi.string().optional(),
+    dosage: Joi.string().optional(),
+    price: Joi.number().precision(2).required(),
+  }),
+
+  updateDrug: Joi.object({
+    name: Joi.string(),
+    brandName: Joi.string(),
+    categoryId: Joi.string().guid(),
+    imageUrl: Joi.string().optional(),
+    type: Joi.string().optional(),
+    dosage: Joi.string().optional(),
+    price: Joi.number().precision(2),
+  }),
+
+  createDrugCategory: Joi.object({
+    name: Joi.string().required(),
+    description: Joi.string(),
+  }),
+
+  updateDrugCategory: Joi.object({
+    name: Joi.string(),
+    description: Joi.string(),
+  }),
 }
 
 module.exports = schemas
