@@ -44,7 +44,7 @@ const register = async (req, res, next) => {
       { transaction: t }
     )
 
-    await sendOtpEmail(newUser, otpRecord.code)
+    sendOtpEmail(newUser, otpRecord.code)
 
     await t.commit()
 
@@ -67,9 +67,9 @@ const verifyCode = async (req, res, next) => {
   const t = await sequelize.transaction()
 
   try {
-    const { id, code } = req.body
+    const { email, code } = req.body
 
-    const user = await User.findOne({ where: { id }, transaction: t })
+    const user = await User.findOne({ where: { email }, transaction: t })
     if (!user) {
       await t.rollback()
       return notFound(res, 'User not found')

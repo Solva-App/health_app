@@ -1,14 +1,13 @@
 const jwt = require('jsonwebtoken')
+const logger = require('../utils/logger')
 const { unAuthorized } = require('../utils/response')
 
 const verifyToken = (token, secret) => {
   try {
     return jwt.verify(token, secret)
   } catch (err) {
-    if (err.name === 'JsonWebTokenError') {
-      return null
-    }
-    return err
+    logger.error(err)
+    return null
   }
 }
 
