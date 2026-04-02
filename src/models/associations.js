@@ -10,16 +10,34 @@ const setupAssociations = () => {
   DrugCategory.hasMany(Drug, { foreignKey: 'categoryId', as: 'drugs' })
   Drug.belongsTo(DrugCategory, { foreignKey: 'categoryId', as: 'category' })
 
-  Prescription.belongsToMany(Drug, {
-    through: PrescriptionItem,
-    as: 'medications',
-  })
-  Drug.belongsToMany(Prescription, {
-    through: PrescriptionItem,
-  })
+  Drug.hasMany(PrescriptionItem, {
+    foreignKey: 'drugId',
+    as: 'prescriptionUsages'
+  });
+  PrescriptionItem.belongsTo(Drug, {
+    foreignKey: 'drugId',
+    as: 'drugDetails'
+  });
 
-  Prescription.belongsTo(User, { foreignKey: 'userId', as: 'patient' })
-  User.hasMany(Prescription, { foreignKey: 'userId', as: 'prescriptions' })
+  User.hasMany(Prescription, {
+    foreignKey: 'userId',
+    as: 'prescriptions',
+    onDelete: 'CASCADE'
+  });
+  Prescription.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'patient'
+  });
+
+  Prescription.hasMany(PrescriptionItem, {
+    foreignKey: 'prescriptionId',
+    as: 'items',
+    onDelete: 'CASCADE'
+  });
+  PrescriptionItem.belongsTo(Prescription, {
+    foreignKey: 'prescriptionId',
+    as: 'header'
+  });
 }
 
 module.exports = setupAssociations

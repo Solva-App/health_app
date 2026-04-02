@@ -28,6 +28,15 @@ const Prescription = sequelize.define('Prescription', prescriptionSchema, {
 })
 
 const prescriptionItemSchema = {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  prescriptionId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
   drugId: {
     type: DataTypes.UUID,
     allowNull: false,

@@ -123,6 +123,21 @@ const schemas = {
     name: Joi.string(),
     description: Joi.string(),
   }),
+
+  createPrescription: Joi.object({
+    title: Joi.string().required().messages({
+      'any.required': 'Please provide a title for this prescription'
+    }),
+    items: Joi.array().items(
+      Joi.object({
+        drugId: Joi.string().uuid().required(),
+        instructions: Joi.string().required(),
+        duration: Joi.string().allow('', null)
+      })
+    ).min(1).required().messages({
+      'array.min': 'A prescription must have at least one medication'
+    })
+  }),
 }
 
 module.exports = schemas
