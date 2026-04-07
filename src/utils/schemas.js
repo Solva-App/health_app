@@ -102,6 +102,7 @@ const schemas = {
     type: Joi.string().optional(),
     dosage: Joi.string().optional(),
     price: Joi.number().precision(2).required(),
+    quantity: Joi.number().integer().min(0).required(),
   }),
 
   updateDrug: Joi.object({
@@ -112,6 +113,7 @@ const schemas = {
     type: Joi.string().optional(),
     dosage: Joi.string().optional(),
     price: Joi.number().precision(2),
+    quantity: Joi.number().integer().min(0),
   }),
 
   createDrugCategory: Joi.object({

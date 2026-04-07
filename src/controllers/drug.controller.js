@@ -5,7 +5,7 @@ const { success, notFound, created } = require('../utils/response')
 const getDrugs = async (req, res, next) => {
   try {
     const drugs = await Drug.findAll({
-      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price'],
+      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price', 'quantity'],
       include: [
         {
           model: DrugCategory,
@@ -25,7 +25,7 @@ const getDrugById = async (req, res, next) => {
   try {
     const { id } = req.params
     const drug = await Drug.findByPk(id, {
-      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price'],
+      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price', 'quantity'],
       include: [
         {
           model: DrugCategory,
@@ -57,7 +57,7 @@ const getDrugsByKeyword = async (req, res, next) => {
       where: {
         [Op.or]: [{ name: { [Op.like]: `%${keyword}%` } }, { brandName: { [Op.like]: `%${keyword}%` } }],
       },
-      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price'],
+      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price', 'quantity'],
       include: [
         {
           model: DrugCategory,
@@ -90,7 +90,7 @@ const getDrugsByCategory = async (req, res, next) => {
     const { categoryId } = req.params
     const drugs = await Drug.findAll({
       where: { categoryId },
-      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price'],
+      attributes: ['id', 'name', 'brandName', 'categoryId', 'imageUrl', 'type', 'dosage', 'price', 'quantity'],
       include: [
         {
           model: DrugCategory,
@@ -125,7 +125,7 @@ const getDrugCategory = async (req, res, next) => {
 
 const createDrug = async (req, res, next) => {
   try {
-    const { name, brandName, categoryId, imageUrl, type, dosage, price } = req.body
+    const { name, brandName, categoryId, imageUrl, type, dosage, price, quantity } = req.body
     const drug = await Drug.create({
       name,
       brandName,
@@ -134,6 +134,7 @@ const createDrug = async (req, res, next) => {
       type,
       dosage,
       price,
+      quantity,
     })
 
     return created(res, 'Drug created successfully', drug)
@@ -145,7 +146,7 @@ const createDrug = async (req, res, next) => {
 const updateDrug = async (req, res, next) => {
   try {
     const { id } = req.params
-    const { name, brandName, categoryId, imageUrl, type, dosage, price } = req.body
+    const { name, brandName, categoryId, imageUrl, type, dosage, price, quantity } = req.body
     const drug = await Drug.findByPk(id)
 
     if (!drug) {
@@ -160,6 +161,7 @@ const updateDrug = async (req, res, next) => {
       type,
       dosage,
       price,
+      quantity,
     })
 
     return success(res, 'Drug updated successfully', drug)

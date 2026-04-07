@@ -67,6 +67,10 @@ const drugSchema = {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
+  quantity: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 }
 
 const Drug = sequelize.define('Drug', drugSchema, {
