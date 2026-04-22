@@ -8,11 +8,7 @@ const userSchema = {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
     unique: true,
-  },
-  username: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: true,
+    allowNull: false,
   },
   fullName: {
     type: DataTypes.STRING,

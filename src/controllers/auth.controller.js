@@ -161,7 +161,6 @@ const login = async (req, res, next) => {
     return success(res, 'Login successful', {
       accessToken,
       refreshToken,
-      expiresIn: process.env.JWT_ACCESS_EXPIRY,
     })
   } catch (error) {
     next(error)
@@ -235,9 +234,9 @@ const forgotPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   const t = await sequelize.transaction()
   try {
-    const { id, code, newPassword } = req.body
+    const { email, code, newPassword } = req.body
 
-    const user = await User.findOne({ where: { id }, transaction: t })
+    const user = await User.findOne({ where: { email }, transaction: t })
     if (!user) {
       await t.rollback()
       return badRequest(res, 'Invalid request')
@@ -266,27 +265,10 @@ const resetPassword = async (req, res, next) => {
   }
 }
 
-const logout = async (req, res, next) => {
-  try {
-    const { id } = req.user
-
-    if (!id) {
-      return unAuthorized(res, 'Authentication required')
-    }
-
-    await User.update({ refreshToken: null }, { where: { id } })
-
-    return success(res, 'Logged out successfully')
-  } catch (error) {
-    next(error)
-  }
-}
-
 module.exports = {
   register,
   login,
   refreshToken,
-  logout,
   verifyCode,
   resendOtp,
   forgotPassword,

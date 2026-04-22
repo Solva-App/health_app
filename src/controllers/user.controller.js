@@ -1,6 +1,6 @@
 const { sequelize } = require('../config/db')
 const User = require('../models/user.model')
-const { success, notFound, badRequest } = require('../utils/response')
+const { success, notFound, badRequest, unAuthorized } = require('../utils/response')
 const { comparePassword, hashPassword } = require('../utils/security')
 
 const getUser = async (req, res, next) => {
@@ -24,7 +24,7 @@ const updateUser = async (req, res, next) => {
   try {
     const userId = req.user.id
 
-    const { username, fullName, phoneNumber } = req.body
+    const { fullName, phoneNumber } = req.body
 
     const user = await User.findByPk(userId)
 
@@ -33,7 +33,6 @@ const updateUser = async (req, res, next) => {
     }
 
     await user.update({
-      username: username || user.username,
       fullName: fullName || user.fullName,
       phoneNumber: phoneNumber || user.phoneNumber,
     })
@@ -41,7 +40,6 @@ const updateUser = async (req, res, next) => {
     return success(res, 'Profile updated successfully', {
       user: {
         id: user.id,
-        username: user.username,
         fullName: user.fullName,
         email: user.email,
         phoneNumber: user.phoneNumber,
@@ -75,6 +73,22 @@ const changePassword = async (req, res, next) => {
   }
 }
 
+const logout = async (req, res, next) => {
+  try {
+    const { id } = req.user
+
+    if (!id) {
+      return unAuthorized(res, 'Authentication required')
+    }
+
+    await User.update({ refreshToken: null }, { where: { id } })
+
+    return success(res, 'Logged out successfully')
+  } catch (error) {
+    next(error)
+  }
+}
+
 const deleteAccount = async (req, res, next) => {
   const t = await sequelize.transaction()
   try {
@@ -95,4 +109,10 @@ const deleteAccount = async (req, res, next) => {
   }
 }
 
-module.exports = { getUser, updateUser, changePassword, deleteAccount }
+module.exports = {
+  getUser,
+  updateUser,
+  changePassword,
+  logout,
+  deleteAccount
+}
