@@ -165,6 +165,10 @@ const schemas = {
     city: Joi.string().required(),
     state: Joi.string().required(),
   }),
+
+  sendMessage: Joi.object({
+    message: Joi.string().required(),
+  }),
 }
 
 module.exports = schemas
