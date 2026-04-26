@@ -114,5 +114,5 @@ module.exports = {
   updateUser,
   changePassword,
   logout,
-  deleteAccount
+  deleteAccount,
 }
