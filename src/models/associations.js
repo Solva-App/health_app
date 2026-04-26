@@ -2,6 +2,8 @@ const User = require('./user.model')
 const Otp = require('./otp.model')
 const { Drug, DrugCategory } = require('./drug.model')
 const { Prescription, PrescriptionItem } = require('./prescription.model')
+const { Order, OrderItem, OrderHistory } = require('./order.model')
+const Address = require('./address.model')
 
 const setupAssociations = () => {
   User.hasOne(Otp, { foreignKey: 'userId', as: 'otp', onDelete: 'CASCADE' })
@@ -38,6 +40,23 @@ const setupAssociations = () => {
     foreignKey: 'prescriptionId',
     as: 'header',
   })
+
+  User.hasMany(Order, { foreignKey: 'userId', as: 'orders' })
+  Order.belongsTo(User, { foreignKey: 'userId', as: 'customer' })
+
+  Order.hasMany(OrderItem, { as: 'items', foreignKey: 'orderId' })
+  OrderItem.belongsTo(Order, { foreignKey: 'orderId' })
+
+  Order.hasMany(OrderHistory, { as: 'history', foreignKey: 'orderId' })
+  OrderHistory.belongsTo(Order, { foreignKey: 'orderId' })
+
+  Drug.hasMany(OrderItem, { foreignKey: 'drugId' })
+  OrderItem.belongsTo(Drug, { as: 'Drug', foreignKey: 'drugId' })
+
+  User.hasMany(Address, { foreignKey: 'userId', as: 'addresses' })
+  Address.belongsTo(User, { foreignKey: 'userId' })
+
+  Order.belongsTo(Address, { foreignKey: 'addressId', as: 'shippingDetails' })
 }
 
 module.exports = setupAssociations

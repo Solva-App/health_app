@@ -13,6 +13,8 @@ const authRoutes = require('./routes/auth.routes')
 const userRoutes = require('./routes/user.routes')
 const drugRoutes = require('./routes/drug.routes')
 const prescriptionRoutes = require('./routes/prescription.routes')
+const orderRoutes = require('./routes/order.routes')
+const addressRoutes = require('./routes/address.routes')
 
 const app = express()
 
@@ -32,6 +34,8 @@ app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/drugs', drugRoutes)
 app.use('/api/v1/prescriptions', prescriptionRoutes)
+app.use('/api/v1/orders', orderRoutes)
+app.use('/api/v1/addresses', addressRoutes)
 
 app.use((req, res) => {
   logger.error(`Resources not found for ${req.method} ${req.originalUrl}`)

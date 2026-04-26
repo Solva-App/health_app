@@ -43,7 +43,7 @@ const schemas = {
   resetPassword: Joi.object({
     email: Joi.string().email().required(),
     code: Joi.number().required(),
-    password: Joi.string()
+    newPassword: Joi.string()
       .min(8)
       .max(30)
       .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,30}$'))
@@ -58,13 +58,13 @@ const schemas = {
   }),
 
   updateUser: Joi.object({
-    userName: Joi.string().min(3).max(50).optional(),
     fullName: Joi.string().optional(),
     phoneNumber: Joi.string()
       .regex(/^(?:\+234|234|0)[789][01]\d{8}$/)
       .optional()
       .messages({
-        'string.pattern.base': 'Please provide a valid Nigerian phone number (e.g., 080... or +234...)',
+        'string.pattern.base':
+          'Please provide a valid Nigerian phone number (e.g., 080... or 070... or 090... or +234...)',
       })
       .custom((value) => {
         // Normalize to 080... format
@@ -143,6 +143,27 @@ const schemas = {
       .messages({
         'array.min': 'A prescription must have at least one medication',
       }),
+  }),
+
+  createOrderSchema: Joi.object({
+    items: Joi.array()
+      .items(
+        Joi.object({
+          drugId: Joi.string().uuid().required(),
+          quantity: Joi.number().min(1).required(),
+        })
+      )
+      .required(),
+    addressId: Joi.string().uuid().optional(),
+    street: Joi.string().when('addressId', { is: Joi.exist(), then: Joi.optional(), otherwise: Joi.required() }),
+    city: Joi.string().when('addressId', { is: Joi.exist(), then: Joi.optional(), otherwise: Joi.required() }),
+    state: Joi.string().when('addressId', { is: Joi.exist(), then: Joi.optional(), otherwise: Joi.required() }),
+  }),
+
+  createAddressSchema: Joi.object({
+    street: Joi.string().required(),
+    city: Joi.string().required(),
+    state: Joi.string().required(),
   }),
 }
 
