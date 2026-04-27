@@ -52,7 +52,7 @@ const setupAssociations = () => {
   OrderHistory.belongsTo(Order, { foreignKey: 'orderId' })
 
   Drug.hasMany(OrderItem, { foreignKey: 'drugId' })
-  OrderItem.belongsTo(Drug, { as: 'Drug', foreignKey: 'drugId' })
+  OrderItem.belongsTo(Drug, { as: 'drug', foreignKey: 'drugId' })
 
   User.hasMany(Address, { foreignKey: 'userId', as: 'addresses' })
   Address.belongsTo(User, { foreignKey: 'userId' })

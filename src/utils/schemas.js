@@ -169,6 +169,10 @@ const schemas = {
   sendMessage: Joi.object({
     message: Joi.string().required(),
   }),
+
+  verifyPayment: Joi.object({
+    reference: Joi.string().required(),
+  }),
 }
 
 module.exports = schemas

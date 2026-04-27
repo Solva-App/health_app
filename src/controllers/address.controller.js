@@ -1,4 +1,4 @@
-const { Address } = require('../models/address.model')
+const Address = require('../models/address.model')
 const { success } = require('../utils/response')
 
 const getUserAddresses = async (req, res, next) => {

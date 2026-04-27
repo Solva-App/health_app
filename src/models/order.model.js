@@ -19,12 +19,16 @@ const orderSchema = {
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled'),
+    type: DataTypes.ENUM('pending', 'processing', 'paid', 'shipped', 'delivered', 'cancelled'),
     defaultValue: 'pending',
   },
   addressId: {
     type: DataTypes.UUID,
     allowNull: false,
+  },
+  paymentReference: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 }
 
@@ -89,7 +93,7 @@ const orderHistorySchema = {
   },
   notes: {
     type: DataTypes.TEXT,
-    allowNull: false,
+    allowNull: true,
   },
 }
 
