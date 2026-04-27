@@ -1,24 +1,13 @@
 const { sequelize } = require('../config/db')
 const { Order, OrderItem, OrderHistory } = require('../models/order.model')
 const { Drug } = require('../models/drug.model')
-const Address = require('../models/address.model')
 const { success, created, notFound, badRequest } = require('../utils/response')
 const { initializePayment, verifyPayment } = require('../utils/paystack')
 
 const createOrder = async (req, res, next) => {
   const t = await sequelize.transaction()
   try {
-    const { items, addressId, street, city, state } = req.body
-    let finalAddressId = addressId
-
-    if (!finalAddressId) {
-      const [address] = await Address.findOrCreate({
-        where: { userId: req.user.id, street, city, state },
-        defaults: { userId: req.user.id, street, city, state },
-        transaction: t,
-      })
-      finalAddressId = address.id
-    }
+    const { items, addressId } = req.body
 
     let totalAmount = 0
     for (const item of items) {
@@ -32,7 +21,7 @@ const createOrder = async (req, res, next) => {
         userId: req.user.id,
         status: 'pending',
         totalAmount,
-        addressId: finalAddressId,
+        addressId,
       },
       { transaction: t }
     )

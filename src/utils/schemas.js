@@ -154,10 +154,7 @@ const schemas = {
         })
       )
       .required(),
-    addressId: Joi.string().uuid().optional(),
-    street: Joi.string().when('addressId', { is: Joi.exist(), then: Joi.optional(), otherwise: Joi.required() }),
-    city: Joi.string().when('addressId', { is: Joi.exist(), then: Joi.optional(), otherwise: Joi.required() }),
-    state: Joi.string().when('addressId', { is: Joi.exist(), then: Joi.optional(), otherwise: Joi.required() }),
+    addressId: Joi.string().uuid().required(),
   }),
 
   createAddressSchema: Joi.object({
