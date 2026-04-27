@@ -11,6 +11,7 @@ router.use(isVerified)
 
 router.get('/', addressController.getUserAddresses)
 router.post('/', validate(schemas.createAddressSchema), addressController.createAddress)
+router.patch('/:id', addressController.makeDefaultAddress)
 router.delete('/:id', addressController.deleteAddress)
 
 module.exports = router
