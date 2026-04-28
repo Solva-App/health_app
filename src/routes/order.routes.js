@@ -12,7 +12,7 @@ router.use(isVerified)
 router.post('/', validate(schemas.createOrderSchema), orderController.createOrder)
 router.get('/', orderController.getUserOrders)
 router.get('/:id', orderController.getOrderById)
-router.get('/:id/verify', validate(schemas.verifyPayment),orderController.verifyOrderPayment)
+router.get('/:id/verify', validate(schemas.verifyPayment), orderController.verifyOrderPayment)
 router.post('/:id/pay', orderController.payForOrder)
 
 module.exports = router
